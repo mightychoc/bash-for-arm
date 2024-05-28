@@ -42,6 +42,7 @@ jobs:
 
       - name: Compile for aarch64
         run: |
+          ls
           ./configure --host=aarch64-linux-musl --enable-static
           make
       
