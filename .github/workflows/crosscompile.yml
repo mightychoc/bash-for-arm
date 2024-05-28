@@ -21,37 +21,37 @@ jobs:
       image: muslcc/x86_64:aarch64-linux-musl
       options: --user root
 
-      steps:
-        - name: Install dependencies
-          run: |
-            apk add --update --no-cache --no-progress curl autoconf automake
+    steps:
+      - name: Install dependencies
+        run: |
+          apk add --update --no-cache --no-progress curl autoconf automake
 
-        - name: Fetch latest bash version
-          run: |
-            version=$(curl -s https://ftp.gnu.org/gnu/bash/ | grep -oP 'bash-\K[0-9]+(\.[0-9]+){0,2}(?=\.tar\.gz)' | sort -V | tail -1)
-            echo "Latest bash version: $version"
-            echo "BASH_VERSION=$version" >> $GITHUB_ENV
+      - name: Fetch latest bash version
+        run: |
+          version=$(curl -s https://ftp.gnu.org/gnu/bash/ | grep -oP 'bash-\K[0-9]+(\.[0-9]+){0,2}(?=\.tar\.gz)' | sort -V | tail -1)
+          echo "Latest bash version: $version"
+          echo "BASH_VERSION=$version" >> $GITHUB_ENV
 
-        - name: Download source code
-          run: |
-            mkdir -p bash-src
-            cd bash-src
-            curl -O "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
-            tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
-            cd "bash-${{ env.BASH_VERSION }}"
+      - name: Download source code
+        run: |
+          mkdir -p bash-src
+          cd bash-src
+          curl -O "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
+          tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
+          cd "bash-${{ env.BASH_VERSION }}"
 
-        - name: Compile for aarch64
-          run: |
-            ./configure --host=aarch64-linux-musl --enable-static
-            make
-        
-        - name: Upload .deb to release
-          uses: svenstaro/upload-release-action@v2
-          with:
-            repo_token: ${{ secrets.GITHUB_TOKEN }}
-            file: bash-src/bash-${{ env.BASH_VERSION }}/bash # or just bash
-            overwrite: true
-            tag: v${{ env.BASH_VERSION }}
+      - name: Compile for aarch64
+        run: |
+          ./configure --host=aarch64-linux-musl --enable-static
+          make
+      
+      - name: Upload .deb to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: bash-src/bash-${{ env.BASH_VERSION }}/bash # or just bash
+          overwrite: true
+          tag: v${{ env.BASH_VERSION }}
 
   #   steps:
   #     - name: Fetch latest Bash version
