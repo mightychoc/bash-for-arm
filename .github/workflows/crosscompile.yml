@@ -38,11 +38,11 @@ jobs:
           cd bash-src
           curl -O "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
           tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
-          cd "bash-${{ env.BASH_VERSION }}"
+          
 
       - name: Compile for aarch64
         run: |
-          ls
+          cd "bash-src/bash-${{ env.BASH_VERSION }}"
           ./configure --host=aarch64-linux-musl --enable-static
           make
       
