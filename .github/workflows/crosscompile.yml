@@ -1,36 +1,52 @@
-# This is a basic workflow to help you get started with Actions
 
 name: bash4armCC
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  # Run every Monday at 00:07 (to be a little off the peak time)
+  schedule:
+    - cron: '7 0 * * 1'
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Manual running enabled
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# Allow workflow to write to repository
+permissions:
+  contents: write
+
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  Bash-Download:
+
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Fetch latest Bash version
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          version=latest_version=$(curl -s https://ftp.gnu.org/gnu/bash/ | grep -oP 'bash-\K[0-9]+(\.[0-9]+){0,2}(?=\.tar\.gz)' | sort -V | tail -1)
+          echo "Latest bash version: $version"
+          echo "BASH_VERSION=$version" >> $GITHUB_ENV
+
+      - name: Download source code
+        run: |
+          mkdir -p bash-src
+          cd bash-src
+          curl -O "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
+          tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
+          cd "bash-${{ env.BASH_VERSION }}"
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y gcc-arm-linux-gnueabihf
+
+  Cross-Compile:
+    runs-on: ubuntu-latest
+
+    container:
+      image: muslcc/x86-64:aarch64-linux-musl
+      options: --user root
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apk add --update --no-cache --no-progress bash perl make curl upx tar dpkg autoconf automake
+          ./configure --host=aarch64-linux-musl --enable-static
+          make
+
