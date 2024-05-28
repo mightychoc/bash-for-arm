@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          apk add --update --no-cache --no-progress curl autoconf automake
+          apk add --update --no-cache --no-progress curl make
 
       - name: Fetch latest bash version
         run: |
