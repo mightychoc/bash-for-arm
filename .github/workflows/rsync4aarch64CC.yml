@@ -18,6 +18,8 @@ jobs:
         run: |
           codename=$(lsb_release -cs)
           echo "UBUNTU_CODENAME=$codename" >> $GITHUB_ENV
+          echo "UBUNTU_CODENAME is set to ${{ env.UBUNTU_CODENAME }}"
+
 
       - name: Add apt sources for aarch64
         run: |
@@ -63,11 +65,10 @@ jobs:
           overwrite: true
           tag: rsync v${{ env.RSYNC_VERSION }}
 
-      - name: Compile for aarch64
-        run: |
-          cd "rsync-${{ env.RSYNC_VERSION }}"
-
-
+      # - name: Cleanup
+      #   run: |
+      #     cd ..
+      #     rm -rf "rsync-${{ env.RSYNC_VERSION }}*"
 
       #     # sudo dpkg --add-architecture arm64
 
