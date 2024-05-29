@@ -17,14 +17,12 @@ jobs:
   Cross-Compile:
 
     runs-on: ubuntu-latest
-    container:
-      image: muslcc/x86_64:aarch64-linux-musl
-      options: --user root
-
+  
     steps:
       - name: Install dependencies
         run: |
-          apk add --update --no-cache --no-progress curl make
+          sudo apt update
+          sudo apt install -y gcc-aarch64-linux-gnu curl
 
       - name: Fetch latest bash version
         run: |
@@ -34,23 +32,23 @@ jobs:
 
       - name: Download source code
         run: |
-          mkdir -p bash-src
-          cd bash-src
           curl -O "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
           tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
           
+      # Add step to verify checksum
 
       - name: Compile for aarch64
         run: |
-          cd "bash-src/bash-${{ env.BASH_VERSION }}"
-          ./configure --host=aarch64-linux-musl --enable-static
+          cd "bash-${{ env.BASH_VERSION }}"
+          export CC=aarch64-linux-gnu-gcc
+          ./configure --host=aarch64-linux-gnu CFLAGS="-static" LDFLAGS="-static"
           make
       
-      - name: Upload .deb to release
+      - name: Create release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: bash-src/bash-${{ env.BASH_VERSION }}/bash # or just bash
+          file: bash-${{ env.BASH_VERSION }}/bash # or just bash
           overwrite: true
           tag: v${{ env.BASH_VERSION }}
 
