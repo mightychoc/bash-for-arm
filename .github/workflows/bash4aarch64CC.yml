@@ -32,10 +32,10 @@ jobs:
 
       - name: Download source code
         run: |
-          curl -O "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
+          curl -sO "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
           tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
           
-      # Add step to verify checksum
+      # Add step to verify checksum!
 
       - name: Compile for aarch64
         run: |

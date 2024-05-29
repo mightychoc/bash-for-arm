@@ -1,0 +1,41 @@
+
+name: rsync4aarch64CC
+
+on:
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  Cross-Compile:
+    runs-on: ubuntu-latest
+
+    # steps:
+    #   - name: Install dependencies
+    #     run: |
+    #       sudo apt update
+    #       sudo apt install -y gcc-aarch64-linux-gnu curl
+      
+    #   - name: Fetch latest rsync version
+    #     run: |
+    #       version=$(curl -s "https://download.samba.org/pub/rsync/src/" | grep -o "rsync-[0-9]\+\(\.[0-9]\+\)\{0,2\}\.tar\.gz" | grep -o "[0-9]\+\(\.[0-9]\+\)\{0,2\}" | sort -V | tail -1)
+    #       echo "Latest rsync version: $version"
+    #       echo "RSYNC_VERSION=$version" >> $GITHUB_ENV
+
+    #   - name: Download source code
+    #     run: |
+    #       curl -sO "https://download.samba.org/pub/rsync/src/rsync-${{ env.RSYNC_VERSION }}.tar.gz"
+    #       tar -xzvf "rsync-${{ env.RSYNC_VERSION }}.tar.gz"
+
+      - name: Print sources
+        run: |
+          cd /etc/apt/
+          echo "Contents of /etc/apt/"
+          ls
+          
+
+      # - name: Compile for aarch64
+      #   run: |
+      #     cd "rsync-${{ env.RSYNC_VERSION }}"
