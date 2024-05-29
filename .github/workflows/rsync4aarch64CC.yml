@@ -13,10 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Get Ubuntu Version
+        id: ubuntu_version
+        run: |
+          codename=$(lsb_release -cs)
+          echo "UBUNTU_CODENAME=$codename" >> $GITHUB_ENV
+
+      - name: Add apt sources for aarch64
+        run: |
+          sudo dpkg --add-architecture arm64
+          sudo tee /etc/apt/sources.list.d/arm-cross-compile-sources.list <<EOF
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }} main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }}-updates main restricted
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }} universe
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }} multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }}-updates multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }}-updates universe
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.VERSION_CODENAME }}-backports main restricted universe multiverse
+          EOF
+
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y gcc-aarch64-linux-gnu curl 
+          sudo apt install -y gcc-aarch64-linux-gnu:amd64 curl:amd64 libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64 
       
       - name: Fetch latest rsync version
         run: |
@@ -28,11 +47,6 @@ jobs:
         run: |
           curl -sO "https://download.samba.org/pub/rsync/src/rsync-${{ env.RSYNC_VERSION }}.tar.gz"
           tar -xzvf "rsync-${{ env.RSYNC_VERSION }}.tar.gz"
-      
-      - name: Install necessary packages for build
-        run: |
-          sudo dpkg --add-architecture arm64
-          sudo apt install libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64
 
       - name: Build and compile for aarch64
         run: |
