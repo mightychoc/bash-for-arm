@@ -12,7 +12,7 @@ jobs:
   Cross-Compile:
     runs-on: ubuntu-latest
 
-    # steps:
+    steps:
     #   - name: Install dependencies
     #     run: |
     #       sudo apt update
