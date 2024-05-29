@@ -33,7 +33,9 @@ jobs:
         run: |
           cd /etc/apt/
           echo "Contents of /etc/apt/"
-          ls
+          ls -l
+          cd sources.list.d
+          ls -l
           
 
       # - name: Compile for aarch64
