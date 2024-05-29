@@ -32,10 +32,13 @@ jobs:
       - name: Print sources
         run: |
           cd /etc/apt/
-          echo "Contents of /etc/apt/"
-          ls -l
+          echo "Contents of /etc/apt/sources.list"
+          cat sources.list
           cd sources.list.d
-          ls -l
+          echo "Contents of /etc/apt/sources.list.d/azure-cli.sources"
+          cat azure-cli.sources
+          echo "Contents of /etc/apt/sources.list.d/microsoft-prod.list"
+          cat microsoft-prod.list
           
 
       # - name: Compile for aarch64
