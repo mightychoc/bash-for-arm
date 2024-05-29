@@ -37,7 +37,7 @@ jobs:
           
       # Add step to verify checksum!
 
-      - name: Compile for aarch64
+      - name: Build and compile for aarch64
         run: |
           cd "bash-${{ env.BASH_VERSION }}"
           export CC=aarch64-linux-gnu-gcc
@@ -50,7 +50,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: bash-${{ env.BASH_VERSION }}/bash # or just bash
           overwrite: true
-          tag: v${{ env.BASH_VERSION }}
+          tag: bash v${{ env.BASH_VERSION }}
 
   #   steps:
   #     - name: Fetch latest Bash version
