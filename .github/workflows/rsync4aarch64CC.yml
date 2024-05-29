@@ -29,6 +29,10 @@ jobs:
           curl -sO "https://download.samba.org/pub/rsync/src/rsync-${{ env.RSYNC_VERSION }}.tar.gz"
           tar -xzvf "rsync-${{ env.RSYNC_VERSION }}.tar.gz"
       
+      - name: Install necessary packages for build
+        run: |
+          sudo apt install libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64
+
       - name: Build and compile for aarch64
         run: |
           cd "rsync-${{ env.RSYNC_VERSION }}"
@@ -48,9 +52,7 @@ jobs:
         run: |
           cd "rsync-${{ env.RSYNC_VERSION }}"
 
-      # - name: Install necessary packages for build
-      #   run: |
-      #     sudo apt install libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64
+
 
       #     # sudo dpkg --add-architecture arm64
 
