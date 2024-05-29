@@ -31,6 +31,7 @@ jobs:
       
       - name: Install necessary packages for build
         run: |
+          sudo dpkg --add-architecture arm64
           sudo apt install libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64
 
       - name: Build and compile for aarch64
