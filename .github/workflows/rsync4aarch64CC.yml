@@ -28,19 +28,13 @@ jobs:
         run: |
           curl -sO "https://download.samba.org/pub/rsync/src/rsync-${{ env.RSYNC_VERSION }}.tar.gz"
           tar -xzvf "rsync-${{ env.RSYNC_VERSION }}.tar.gz"
-
-      # - name: Install necessary packages for build
-      #   run: |
-      #     sudo apt install libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64
-
-      #     # sudo dpkg --add-architecture arm64
       
       - name: Build and compile for aarch64
+        run: |
           cd "rsync-${{ env.RSYNC_VERSION }}"
           export CC=aarch64-linux-gnu-gcc
           ./configure --host=aarch64-linux-gnu CFLAGS="-static" LDFLAGS="-static"
           make
-
 
       - name: Create release
         uses: svenstaro/upload-release-action@v2
@@ -50,7 +44,18 @@ jobs:
           overwrite: true
           tag: rsync v${{ env.RSYNC_VERSION }}
 
-      # - name: Print sources
+      - name: Compile for aarch64
+        run: |
+          cd "rsync-${{ env.RSYNC_VERSION }}"
+
+      # - name: Install necessary packages for build
+      #   run: |
+      #     sudo apt install libssl-dev:arm64 libxxhash-dev:arm64 libzstd-dev:arm64 liblz4-dev:arm64
+
+      #     # sudo dpkg --add-architecture arm64
+
+
+   # - name: Print sources
       #   run: |
       #     cd /etc/apt/
       #     echo "Contents of /etc/apt/sources.list"
@@ -60,8 +65,3 @@ jobs:
       #     cat azure-cli.sources
       #     echo "Contents of /etc/apt/sources.list.d/microsoft-prod.list"
       #     cat microsoft-prod.list
-          
-
-      - name: Compile for aarch64
-        run: |
-          cd "rsync-${{ env.RSYNC_VERSION }}"
