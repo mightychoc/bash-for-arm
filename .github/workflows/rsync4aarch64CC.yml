@@ -24,13 +24,10 @@ jobs:
           echo "UBUNTU_CODENAME is set to ${{ env.UBUNTU_CODENAME }}"
           sudo dpkg --add-architecture arm64
           sudo tee /etc/apt/sources.list.d/arm-cross-compile-sources.list <<EOF
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} main restricted
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-updates main restricted
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} universe
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-updates multiverse
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-updates universe
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-backports main restricted universe multiverse
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} main multiverse universe
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-updates main multiverse universe
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-security main multiverse universe
+          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-backports main multiverse universe
           EOF
 
       - name: Install dependencies
