@@ -18,11 +18,10 @@ jobs:
         run: |
           codename=$(lsb_release -cs)
           echo "UBUNTU_CODENAME=$codename" >> $GITHUB_ENV
-          echo "UBUNTU_CODENAME is set to ${{ env.UBUNTU_CODENAME }}"
-
-
+          
       - name: Add apt sources for aarch64
         run: |
+          echo "UBUNTU_CODENAME is set to ${{ env.UBUNTU_CODENAME }}"
           sudo dpkg --add-architecture arm64
           sudo tee /etc/apt/sources.list.d/arm-cross-compile-sources.list <<EOF
           deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} main restricted
