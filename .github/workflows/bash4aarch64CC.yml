@@ -50,7 +50,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: bash-${{ env.BASH_VERSION }}/bash
           overwrite: true
-          tag: "bash v${{ env.BASH_VERSION }} for arm64"
+          tag: v${{ env.BASH_VERSION }}
 
   #   steps:
   #     - name: Fetch latest Bash version
