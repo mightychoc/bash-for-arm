@@ -30,17 +30,12 @@ jobs:
           echo "Latest bash version: $version"
           echo "BASH_VERSION=$version" >> $GITHUB_ENV
 
-      - name: Prepare gpg
-        run: |
-          GNUPGHOME="$(mktemp -d)"
-          export GNUPGHOME
-          gpg --batch --keyserver hkps://keyserver.ubuntu.com:443 --recv-keys 7C0135FB088AAF6C66C650B9BB5869F064EA74AB
-
       - name: Download source code
         run: |
+          curl -sO "https://ftp.gnu.org/gnu/gnu-keyring.gpg"
           curl -sO "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
           curl -sO "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz.sig"
-          gpg --batch --verify "bash-${{ env.BASH_VERSION }}.tar.gz.sig" "bash-${{ env.BASH_VERSION }}.tar.gz"
+          gpg --verify --keyring gnu-keyring.gpg "bash-${{ env.BASH_VERSION }}.tar.gz.sig" "bash-${{ env.BASH_VERSION }}.tar.gz"
           tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
 
       - name: Build and compile for aarch64
