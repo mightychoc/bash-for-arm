@@ -1,12 +1,11 @@
 
-name: bash4armCC
+name: bash4aarch64CC
 
 on:
   # Run every Monday at 00:07 (to be a little off the peak time)
-  # schedule:
-  #   - cron: '7 0 * * 1'
+  schedule:
+    - cron: '7 0 * * 1'
 
-  # Manual running enabled
   workflow_dispatch:
 
 # Allow workflow to write to repository
