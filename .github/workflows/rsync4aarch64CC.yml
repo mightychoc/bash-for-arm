@@ -19,10 +19,21 @@ jobs:
           codename=$(lsb_release -cs)
           echo "UBUNTU_CODENAME=$codename" >> $GITHUB_ENV
           
+      # This step sets up the /etc/apt/sources.list and /etc/apt/sources.list.d/arm-cross-compile-sources.list files to handle arm64 packages.
+      # We need to do so because rsync requires the libxxhash-dev, libssl-dev, libzstd-dev and liblz4-dev for arm64 to form a complete build.
+      # This concretely means that we add the ports.ubuntu.com sources to our own arm-cross-compile-sources.list file where we can fetch the packages.
+      # Further we need to adapt sources.list to contains [arch=arm64] tags in order for apt to not get confused.
       - name: Prepare for new architecture
         run: |
           echo "UBUNTU_CODENAME is set to ${{ env.UBUNTU_CODENAME }}"
           sudo dpkg --add-architecture arm64
+          
+          if grep -q '\[arch=amd64\]' /etc/apt/sources.list; then
+            echo "/etc/apt/sources.list already modified. Skipping sed operation..."
+          else
+            sudo sed -i 's/deb/deb [arch=amd64]/g' /etc/apt/sources.list
+          fi
+
           sudo tee /etc/apt/sources.list.d/arm-cross-compile-sources.list <<EOF
           deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} main restricted
           deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-updates main restricted
