@@ -48,9 +48,9 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: bash-${{ env.BASH_VERSION }}/bash # or just bash
+          file: bash-${{ env.BASH_VERSION }}/bash
           overwrite: true
-          tag: bash v${{ env.BASH_VERSION }}
+          tag: "bash v${{ env.BASH_VERSION }} for arm64"
 
   #   steps:
   #     - name: Fetch latest Bash version
