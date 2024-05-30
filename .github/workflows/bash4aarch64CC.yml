@@ -35,7 +35,7 @@ jobs:
           curl -sO "https://ftp.gnu.org/gnu/gnu-keyring.gpg"
           curl -sO "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz"
           curl -sO "https://ftp.gnu.org/gnu/bash/bash-${{ env.BASH_VERSION }}.tar.gz.sig"
-          gpg --verify --keyring gnu-keyring.gpg "bash-${{ env.BASH_VERSION }}.tar.gz.sig" "bash-${{ env.BASH_VERSION }}.tar.gz"
+          gpg --verify --keyring ./gnu-keyring.gpg "bash-${{ env.BASH_VERSION }}.tar.gz.sig" "bash-${{ env.BASH_VERSION }}.tar.gz"
           tar -xzvf "bash-${{ env.BASH_VERSION }}.tar.gz"
 
       - name: Build and compile for aarch64
