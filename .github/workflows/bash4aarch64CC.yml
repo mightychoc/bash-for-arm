@@ -32,9 +32,9 @@ jobs:
 
       - name: Prepare gpg
         run: |
-        GNUPGHOME="$(mktemp -d)"
-        export GNUPGHOME
-        gpg --batch --keyserver hkps://keyserver.ubuntu.com:443 --recv-keys 7C0135FB088AAF6C66C650B9BB5869F064EA74AB
+          GNUPGHOME="$(mktemp -d)"
+          export GNUPGHOME
+          gpg --batch --keyserver hkps://keyserver.ubuntu.com:443 --recv-keys 7C0135FB088AAF6C66C650B9BB5869F064EA74AB
 
       - name: Download source code
         run: |
