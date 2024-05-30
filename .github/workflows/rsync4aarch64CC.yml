@@ -19,16 +19,59 @@ jobs:
           codename=$(lsb_release -cs)
           echo "UBUNTU_CODENAME=$codename" >> $GITHUB_ENV
           
-      - name: Add apt sources for aarch64
+      - name: Prepare for new architecture
         run: |
           echo "UBUNTU_CODENAME is set to ${{ env.UBUNTU_CODENAME }}"
           sudo dpkg --add-architecture arm64
-          sudo tee /etc/apt/sources.list.d/arm-cross-compile-sources.list <<EOF
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }} main multiverse universe
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-updates main multiverse universe
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-security main multiverse universe
-          deb [arch=arm64] http://ports.ubuntu.com/ ${{ env.UBUNTU_CODENAME }}-backports main multiverse universe
-          EOF
+        
+      - name: Add jammy main
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }} main
+          repo-name: ${{ env.UBUNTU_CODENAME}}-main-sources
+          perform-update: false
+
+      - name: Add jammy-updates main restricted
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }}-updates main restricted
+          repo-name: ${{ env.UBUNTU_CODENAME}}-updates-main-restricted-sources
+          perform-update: false
+
+      - name: Add jammy universe
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }} universe
+          repo-name: ${{ env.UBUNTU_CODENAME}}-universe-sources
+          perform-update: false
+          
+      - name: Add jammy-updates universe
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }}-updates universe
+          repo-name: ${{ env.UBUNTU_CODENAME}}-updates-universe-sources
+          perform-update: false
+
+      - name: Add jammy multiverse
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }} multiverse
+          repo-name: ${{ env.UBUNTU_CODENAME}}-multiverse-sources
+          perform-update: false
+
+      - name: Add jammy-updates multiverse
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }}-updates multiverse
+          repo-name: ${{ env.UBUNTU_CODENAME}}-updates-multiverse-sources
+          perform-update: false
+
+      - name: Add jammy-backports
+        uses: myci-actions/add-deb-repo@11
+        with:
+          repo: deb [arch=arm64] http://ports.ubuntu.com ${{ env.UBUNTU_CODENAME }}-backports main restricted universe multiverse
+          repo-name: ${{ env.UBUNTU_CODENAME}}-backports-sources
+          perform-update: true
 
       - name: Install dependencies
         run: |
